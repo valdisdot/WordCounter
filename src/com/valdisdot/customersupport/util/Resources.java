@@ -55,4 +55,14 @@ public final class Resources {
     public static Path getResultFilePath() {
         return Path.of(properties.getProperty("path.result.file")).normalize();
     }
+
+    public static Color getButtonsColor(){
+        String[] rgb = properties.getProperty("button.color").split(",");
+        return new Color(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
+    }
+
+    public static Color getPanelColor(){
+        String[] rgb = properties.getProperty("panel.color").split(",");
+        return new Color(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
+    }
 }
