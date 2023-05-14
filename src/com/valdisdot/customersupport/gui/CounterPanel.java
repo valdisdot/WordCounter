@@ -52,8 +52,11 @@ public class CounterPanel extends ContentPanel {
                                 .trim()
                 )
         );
+        saveButton.setBackground(Resources.getButtonsColor());
         sumLabel = new JLabel("Σ: " + counter.getSum());
         sumLabel.setPreferredSize(new Dimension(60, 20));
+        sumLabel.setBackground(Resources.getPanelColor());
+        setBackground(Resources.getPanelColor());
         add(saveButton);
         add(inputField);
         add(sumLabel);
@@ -68,6 +71,7 @@ public class CounterPanel extends ContentPanel {
         if (Objects.isNull(panel)) {
             //create a word graphic element
             CounterElementLabel counterElementLabel = new CounterElementLabel(word, counter, Resources.getBiggestElementWidth() - 2 * 30 - 3 * LayoutManager.DEFAULT_INDENT_X);
+            counterElementLabel.setBackground(Resources.getPanelColor());
             //define Runnable action
             Runnable ifExistsAction = () -> {
                 counterElementLabel.increase();
@@ -79,6 +83,7 @@ public class CounterPanel extends ContentPanel {
             increase.setPreferredSize(new Dimension(30, 30));
             increase.setMargin(new Insets(0, 0, 0, 0));
             increase.addActionListener(l -> ifExistsAction.run());
+            increase.setBackground(Resources.getButtonsColor());
             //create a decrease button and bound it with deletion from the wordGraphicElementPanelsAndAction if count = 0
             JButton decrease = new JButton("-");
             decrease.setPreferredSize(new Dimension(30, 30));
@@ -99,6 +104,7 @@ public class CounterPanel extends ContentPanel {
                 //after the panel modification
                 updateSumLabel();
             });
+            decrease.setBackground(Resources.getButtonsColor());
             //create panel with the word graphic element, increase button, decrease button
             panel = new ContentPanel(LayoutManager.Order.HORIZONTAL, LayoutManager.DEFAULT_INDENT_X, LayoutManager.DEFAULT_INDENT_Y, true);
             //set name (for searching and storing in the TreeMap
@@ -106,6 +112,7 @@ public class CounterPanel extends ContentPanel {
             panel.add(counterElementLabel);
             panel.add(increase);
             panel.add(decrease);
+            panel.setBackground(Resources.getPanelColor());
             //delete all panel from this panel
             wordGraphicElementPanelsAndAction.keySet().forEach(this::remove);
             //add the panel and action to the wordGraphicElementPanelsAndAction
