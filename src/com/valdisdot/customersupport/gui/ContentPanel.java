@@ -8,20 +8,20 @@ import java.util.stream.Collectors;
 
 //custom implementation of JPanel, places component one by one, linear
 //after each add-calling use internal class DimensionCounter for counting preferred size
-//use custom LayoutManager by default
+//use custom LayoutManagerImpl by default
 public class ContentPanel extends JPanel {
     //encapsulation of preferred size counting logic
     private final DimensionCounter counter;
 
     public ContentPanel() {
-        this(LayoutManager.Order.VERTICAL, LayoutManager.DEFAULT_INDENT_X, LayoutManager.DEFAULT_INDENT_Y, false);
+        this(LayoutManagerImpl.Order.VERTICAL, LayoutManagerImpl.DEFAULT_INDENT_X, LayoutManagerImpl.DEFAULT_INDENT_Y, false);
     }
 
     //main constructor, if isInternalPanel, will count preferred size without first indents
-    public ContentPanel(LayoutManager.Order order, int indentX, int indentY, boolean isInternalPanel) {
+    public ContentPanel(LayoutManagerImpl.Order order, int indentX, int indentY, boolean isInternalPanel) {
         super();
         counter = new DimensionCounter(order, indentX, indentY, isInternalPanel);
-        setLayout(new LayoutManager(order, indentX, indentY, isInternalPanel));
+        setLayout(new LayoutManagerImpl(order, indentX, indentY, isInternalPanel));
     }
 
     //add component and recount preferred size
@@ -41,14 +41,14 @@ public class ContentPanel extends JPanel {
 
     //class with encapsulation of preferred size counting logic
     private class DimensionCounter {
-        private final LayoutManager.Order order;
+        private final LayoutManagerImpl.Order order;
         private final int indentX;
         private final int indentY;
         private final boolean isInternalPanel;
         private int width;
         private int height;
 
-        public DimensionCounter(LayoutManager.Order order, int indentX, int indentY, boolean isInternalPanel) {
+        public DimensionCounter(LayoutManagerImpl.Order order, int indentX, int indentY, boolean isInternalPanel) {
             this.order = order;
             this.indentX = indentX;
             this.indentY = indentY;
@@ -59,7 +59,7 @@ public class ContentPanel extends JPanel {
         }
 
         public void add(Dimension dimension) {
-            if (order == LayoutManager.Order.VERTICAL) {
+            if (order == LayoutManagerImpl.Order.VERTICAL) {
                 //if !isInternalPanel count with indents left and right indent
                 width = Math.max(width, dimension.width + (isInternalPanel ? 0 : indentX * 2));
                 height += indentY + dimension.height;
@@ -72,7 +72,7 @@ public class ContentPanel extends JPanel {
 
         public void remove(Dimension dimension) {
             List<Dimension> parentDimensions = Arrays.stream(ContentPanel.this.getComponents()).map(Component::getPreferredSize).collect(Collectors.toList());
-            if (order == LayoutManager.Order.VERTICAL) {
+            if (order == LayoutManagerImpl.Order.VERTICAL) {
                 width = parentDimensions.stream().mapToInt(dim -> dim.width + (isInternalPanel ? 0 : indentX * 2)).max().orElse(0);
                 height -= indentY + dimension.height;
             } else {
