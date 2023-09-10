@@ -2,10 +2,11 @@ package com.valdisdot.customersupport.gui;
 
 import com.valdisdot.customersupport.util.Counter;
 import com.valdisdot.customersupport.util.Resources;
-import com.valdisdot.customersupport.util.Writer;
+import com.valdisdot.customersupport.util.InputOutput;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Comparator;
@@ -43,14 +44,16 @@ public class CounterPanel extends ContentPanel {
         inputField.setToolTipText(Resources.getInputFieldToolTipText());
         JButton saveButton = new JButton(Resources.getSaveButtonText());
         saveButton.setPreferredSize(new Dimension(Resources.getBiggestElementWidth(), 20));
-        saveButton.addActionListener(l -> Writer.writeStringInFile(
-                        counter.getResult().entrySet().stream()
-                                //keyword: count (new line)
-                                .flatMap(entry -> Stream.of(entry.getKey(), ": ", entry.getValue().toString(), "\n"))
-                                .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
-                                .toString()
-                                .trim()
-                )
+        saveButton.addActionListener(l -> {
+            String res = counter.getResult().entrySet().stream()
+                    //keyword: count (new line)
+                    .flatMap(entry -> Stream.of(entry.getKey(), ": ", entry.getValue().toString(), "\n"))
+                    .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+                    .toString()
+                    .trim();
+            InputOutput.writeStringInFile(res);
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(res), null);
+            }
         );
         saveButton.setBackground(Resources.getButtonsColor());
         sumLabel = new JLabel("Σ: " + counter.getSum());
@@ -60,6 +63,9 @@ public class CounterPanel extends ContentPanel {
         add(saveButton);
         add(inputField);
         add(sumLabel);
+        InputOutput.load().forEach((key, value) -> {
+            for (int i = value; i > 0; --i) add(key);
+        });
     }
 
     private void add(String word) {
@@ -70,7 +76,7 @@ public class CounterPanel extends ContentPanel {
         //if no such panel
         if (Objects.isNull(panel)) {
             //create a word graphic element
-            CounterElementLabel counterElementLabel = new CounterElementLabel(word, counter, Resources.getBiggestElementWidth() - 2 * 30 - 3 * LayoutManager.DEFAULT_INDENT_X);
+            CounterElementLabel counterElementLabel = new CounterElementLabel(word, counter, Resources.getBiggestElementWidth() - 2 * 30 - 3 * LayoutManagerImpl.DEFAULT_INDENT_X);
             counterElementLabel.setBackground(Resources.getPanelColor());
             //define Runnable action
             Runnable ifExistsAction = () -> {
@@ -106,7 +112,7 @@ public class CounterPanel extends ContentPanel {
             });
             decrease.setBackground(Resources.getButtonsColor());
             //create panel with the word graphic element, increase button, decrease button
-            panel = new ContentPanel(LayoutManager.Order.HORIZONTAL, LayoutManager.DEFAULT_INDENT_X, LayoutManager.DEFAULT_INDENT_Y, true);
+            panel = new ContentPanel(LayoutManagerImpl.Order.HORIZONTAL, LayoutManagerImpl.DEFAULT_INDENT_X, LayoutManagerImpl.DEFAULT_INDENT_Y, true);
             //set name (for searching and storing in the TreeMap
             panel.setName(word);
             panel.add(counterElementLabel);
