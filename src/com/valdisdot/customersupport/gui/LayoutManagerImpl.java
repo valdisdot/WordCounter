@@ -2,7 +2,7 @@ package com.valdisdot.customersupport.gui;
 
 import java.awt.*;
 
-public class LayoutManager implements java.awt.LayoutManager {
+public class LayoutManagerImpl implements java.awt.LayoutManager {
     public static final int DEFAULT_INDENT_X = 4;
     public static final int DEFAULT_INDENT_Y = 5;
     private final int indentX;
@@ -10,14 +10,14 @@ public class LayoutManager implements java.awt.LayoutManager {
     private final boolean startWithZeroPosition;
     private final Order order;
 
-    public LayoutManager() {
+    public LayoutManagerImpl() {
         indentX = DEFAULT_INDENT_X;
         indentY = DEFAULT_INDENT_Y;
         startWithZeroPosition = false;
         order = Order.VERTICAL;
     }
 
-    public LayoutManager(Order order, int indentX, int indentY, boolean startWithZeroPosition) {
+    public LayoutManagerImpl(Order order, int indentX, int indentY, boolean startWithZeroPosition) {
         this.indentX = indentX >= 0 ? indentX : DEFAULT_INDENT_X;
         this.indentY = indentY >= 0 ? indentY : DEFAULT_INDENT_Y;
         this.startWithZeroPosition = startWithZeroPosition;
